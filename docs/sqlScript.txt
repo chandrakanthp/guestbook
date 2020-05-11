@@ -1,0 +1,56 @@
+
+
+CREATE USER 'user1'@'localhost' IDENTIFIED BY 'mysql';
+GRANT ALL PRIVILEGES ON * . * TO 'user1'@'localhost';
+FLUSH PRIVILEGES;
+
+create database guestbook;
+use guestbook;
+
+
+create table user_details(
+	username varchar(50) not null primary key,
+	password varchar(100) not null,
+	enabled boolean not null
+);
+
+
+
+create table user_roles (
+	username varchar(50) not null,
+	roles varchar(50) not null,
+	constraint fk_authorities_users foreign key(username) references user_details(username)
+);
+
+
+create table guest_notes_details(
+notes_details_id int primary key auto_increment,
+	username varchar(50) not null,
+	modified_time timestamp default current_timestamp,
+    notes text ,
+    image blob,
+     approveStatus varchar(1)  default 'N'    
+constraint fk_guest_details foreign key(username) references user_details(username)
+     );
+
+
+
+
+
+insert into user_details(username,password,enabled)
+	values('admin','$2a$10$hbxecwitQQ.dDT4JOFzQAulNySFwEpaFLw38jda6Td.Y/cOiRzDFu',true);
+
+insert into user_details(username,password,enabled)
+	values('chandra','$2a$10$F.5IxtIWd9xXv6gPMnNbEeEyG1V4mt6C2YuHFeh3aTgMMx4ZlheN.',true);
+   
+
+insert into user_roles (username,roles) 
+	values('admin','ADMIN');
+
+
+insert into user_roles (username,roles) 
+	values('chandra','GUEST');
+
+commit;
+
+
