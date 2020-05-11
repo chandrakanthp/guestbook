@@ -9,14 +9,17 @@ guestbook application
 docs\sqlScript.txt
 
 3) 
+
 a) Run the maven build to build code and start the application
+
 b) Run the following command to start the application from binary
 
 java -jar guestbook-0.0.1-SNAPSHOT.jar
 the jar file is located in target folder
 
-4) Open http://loclhost:8080 to run the application
+4) Open http://localhost:8080 to run the application
 
 
-5) Application screenshows with flow is avaiable in docs folder
+5) Application screenshots with flow is available in docs folder
+
 filename:docs\app_flow_screen_shots.docx
