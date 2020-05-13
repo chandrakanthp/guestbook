@@ -49,6 +49,7 @@
             <th scope="col">Date</th>
             <th scope="col">Guest Name</th>
             <th scope="col">Notes</th>
+            <th scope="col">Image</th>
             <th scope="col">Actions</th>
           </tr>
         </thead>
@@ -63,6 +64,15 @@
             <td><%=guestNotesDetails[i].getDateTime() %></td>
             <td><%=guestNotesDetails[i].getUsername() %></td>
             <td><%=guestNotesDetails[i].getNotes() %></td>
+            <td>
+            <%
+            if(guestNotesDetails[i].getImage_file_name() != null)
+            {
+            %>
+            	<a href="/viewImage?id=<%=guestNotesDetails[i].getNotes_details_id()%>" ><%=guestNotesDetails[i].getImage_file_name()%> </a>
+            <% } else {	}
+             %>
+            </td>
             <td>              
 				<% if("N".equalsIgnoreCase(guestNotesDetails[i].getApproveStatus())){ %>
               		<button type="button" class="btn btn-success" id="appr<%=guestNotesDetails[i].getNotes_details_id()%>" onclick="approveReject('approve','<%=guestNotesDetails[i].getNotes_details_id()%>')"><i class="fas fa-edit">Approve</i></button>
@@ -70,8 +80,7 @@
          		<% } %>
             </td>
           </tr>        
-			<% } %>        
-        
+			<% } %>          
     	</tbody>
       </table>
     </div>

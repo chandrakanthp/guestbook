@@ -34,6 +34,6 @@ public class GuestAppServiceImpl implements GuestAppService{
 	
 	public GuestNotesDetails getImage(String id)
 	{
-		return appDao.approveRejectNotes(id);
+		return appDao.getImage(id);
 	}
 }

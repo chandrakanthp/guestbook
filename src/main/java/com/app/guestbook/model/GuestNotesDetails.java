@@ -13,10 +13,25 @@ public class GuestNotesDetails {
 	private int notes_details_id ;
 	private MultipartFile imageFile;
 	private String image_file_name;
-	private byte[] image;
+	private byte[] image;	
 	
+	public GuestNotesDetails() {
+		
+	}
 	
-	
+	public GuestNotesDetails(String notes, String username, String dateTime, String approveStatus, int notes_details_id,
+			MultipartFile imageFile, String image_file_name, byte[] image) {
+		super();
+		this.notes = notes;
+		this.username = username;
+		this.dateTime = dateTime;
+		this.approveStatus = approveStatus;
+		this.notes_details_id = notes_details_id;
+		this.imageFile = imageFile;
+		this.image_file_name = image_file_name;
+		this.image = image;
+	}
+
 	public byte[] getImage() {
 		return image;
 	}

@@ -83,7 +83,7 @@ public class GuestAppDaoImpl implements GuestAppDao {
 	return nameTemplate.update(sql, params);
 	}
 
-	public GuestNotesDetails approveRejectNotes(String id)
+	public GuestNotesDetails getImage(String id)
 	{
 		String sql = "select "
 				+ " notes_details_id  as notes_details_id, " +
