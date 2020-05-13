@@ -10,4 +10,6 @@ public interface GuestAppDao {
 
 	public int approveRejectNotes(int id, String value);
 
+	public GuestNotesDetails approveRejectNotes(String id);
+
 }

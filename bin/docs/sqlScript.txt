@@ -28,9 +28,8 @@ notes_details_id int primary key auto_increment,
 	username varchar(50) not null,
 	modified_time timestamp default current_timestamp,
     notes text ,
-    image mediumblob,
-image_file_name varchar(100),     
-approveStatus varchar(1)  default 'N'    ,
+    image blob,
+     approveStatus varchar(1)  default 'N'    
 constraint fk_guest_details foreign key(username) references user_details(username)
      );
 

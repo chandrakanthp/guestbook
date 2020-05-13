@@ -24,18 +24,11 @@
 	<a href="#" class="f90-logout-button"onclick="logoutApp()" style="text-align:right; "><h4>LogOut</h4></a>  
   	<h2>Enter Notes or select a image</h2>  
   
-	<form:form style="width:300px" action="/insertNotes" modelAttribute="guestNotesDetails" enctype="multipart/form-data">  
+	<form:form style="width:300px" action="/insertNotes" modelAttribute="guestNotesDetails">  
 	  	<div class="form-group">  
 	    	<label for="Notes">Notes</label>  
 	    	<form:textarea type="text" class="form-control" path="notes" placeholder="enter notes" />  
 	  	</div>     
-  		
-  			<div class="form-group">  
-	    	<label for="Notes">Upload Image</label>  
-	    	<form:input type="file" class="form-control" path="imageFile" placeholder="Select Image File" accept="image/*" />  
-	  	</div>  
-	  	
-	  	
   		<button type="submit" class="btn btn-default">Submit</button>  
 	</form:form>    
 	</div> 

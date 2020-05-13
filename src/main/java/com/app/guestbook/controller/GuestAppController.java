@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.view.RedirectView;
 
@@ -69,24 +70,20 @@ public class GuestAppController {
 	}
 
   
-  @PostMapping("/insertNotes")
-  public String insertNotes(HttpServletRequest request, Model model,@ModelAttribute GuestNotesDetails guestNotesDetails) {
-    logger.debug("in insertNotes:"+guestNotesDetails.getNotes());
-    guestNotesDetails.setUsername(getLogedUser());
-    int resStatus = appService.insertNotes(guestNotesDetails);
-    request.setAttribute("resStatus", (resStatus==1?"Added Successfully":"Error while adding"));
-    return "guestEntry";
-  }
-  
-  
+	@PostMapping("/insertNotes")
+	public String insertNotes(HttpServletRequest request, Model model,@ModelAttribute GuestNotesDetails guestNotesDetails) {
+		//  logger.debug("in insertNotes:"+guestNotesDetails.getNotes());
+		guestNotesDetails.setUsername(getLogedUser());
+		int resStatus = appService.insertNotes(guestNotesDetails);
+		request.setAttribute("resStatus", (resStatus==1?"Added Successfully":"Error while adding"));
+		return "guestEntry";
+	}
   
 	@GetMapping("/viewAllNotes")
-	public String viewAllNotes(HttpServletRequest request, Model model) {
-	    
+	public String viewAllNotes(HttpServletRequest request, Model model) {	    
 		GuestNotesDetails[] guestNotesDetails =  appService.viewAllNotes();
 		request.setAttribute("guestNotesDetails", guestNotesDetails);
-		request.setAttribute("status", request.getParameter("status"));
-	
+		request.setAttribute("status", request.getParameter("status"));	
 		logger.debug("in viewAllNotes");
 		return "viewNotes";
 	}
@@ -112,6 +109,13 @@ public class GuestAppController {
 		return "index";
 	}
   
+	@GetMapping("/viewImage")
+	public String viewImage(HttpServletRequest request,@RequestParam String id) {
+		GuestNotesDetails data = appService.getImage(id);
+		request.setAttribute("guestNotesDetails", data);	
+		return "downloadFile";
+	}
+
 	Collection<SimpleGrantedAuthority> getRoles()
 	{
 		Collection<SimpleGrantedAuthority> authorities = (Collection<SimpleGrantedAuthority>)SecurityContextHolder.getContext().getAuthentication().getAuthorities();

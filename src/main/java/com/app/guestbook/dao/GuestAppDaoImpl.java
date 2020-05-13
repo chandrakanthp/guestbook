@@ -30,9 +30,23 @@ public class GuestAppDaoImpl implements GuestAppDao {
 	
 	public int insertNotes(GuestNotesDetails notes)
 	{
-		 String sql="insert into guest_notes_details(username,notes) values(:name,:notes)";  
+		 String sql="insert into guest_notes_details(username,notes,image,image_file_name) "
+		 		+ " values(:name,:notes,:image,:image_file_name)";  
+		byte[] image = null;
+		String image_file_name = null;
+		 try
+		 {
+			 image = notes.getImageFile().getBytes();
+			 image_file_name = notes.getImageFile().getOriginalFilename();
+		 }catch(Exception e)
+		 {
+			 
+		 }
+		 
 		 MapSqlParameterSource params = new MapSqlParameterSource();
-		 params.addValue("notes", notes.getNotes())
+		 params.addValue("notes", notes.getNotes()!=null?notes.getNotes():"")
+		 .addValue("image", image)
+		 .addValue("image_file_name", image_file_name)
 		 .addValue("name",notes.getUsername());
     return nameTemplate.update(sql, params);    	
 	}
@@ -43,7 +57,8 @@ public class GuestAppDaoImpl implements GuestAppDao {
 				+ " notes_details_id  as notes_details_id, "
 				+ "username  as username, " + 
 				"	modified_time  as dateTime, " + 
-				"    notes as notes, " +  
+				"    notes as notes, " + 
+				"  image_file_name as image_file_name, "+
 				"     approveStatus as approveStatus from guest_notes_details ";
 		
 		List details = nameTemplate.query(sql, new BeanPropertyRowMapper(GuestNotesDetails.class));
@@ -68,4 +83,21 @@ public class GuestAppDaoImpl implements GuestAppDao {
 	return nameTemplate.update(sql, params);
 	}
 
+	public GuestNotesDetails approveRejectNotes(String id)
+	{
+		String sql = "select "
+				+ " notes_details_id  as notes_details_id, " +
+				"  image_file_name as image_file_name, image as image "+
+				"     from guest_notes_details where notes_details_id=:notes_details_id ";
+		
+		 MapSqlParameterSource params = new MapSqlParameterSource();
+		 params.addValue("notes_details_id", id);
+		 List details = nameTemplate.query(sql,params, new BeanPropertyRowMapper(GuestNotesDetails.class));
+			if(details != null)
+			{
+				return (GuestNotesDetails)details.get(0);
+			}
+			
+			return null;
+	}
 }

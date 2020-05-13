@@ -9,4 +9,6 @@ public interface GuestAppService {
 	public GuestNotesDetails[] viewAllNotes();
 
 	public int approveRejectNotes(int id, String value);
+
+	public GuestNotesDetails getImage(String id);
 }

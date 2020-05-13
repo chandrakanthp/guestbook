@@ -17,6 +17,8 @@ public class AppConfig {
 
   @Autowired
   private Environment env;
+  
+  private String db;
 
   @Bean(name = "dataSource")
   public DataSource getDataSource() {

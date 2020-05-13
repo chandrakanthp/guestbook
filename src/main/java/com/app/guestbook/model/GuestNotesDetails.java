@@ -1,14 +1,46 @@
 package com.app.guestbook.model;
 
+import java.io.File;
+
+import org.springframework.web.multipart.MultipartFile;
+
 public class GuestNotesDetails {
 	
 	private String notes;
 	private String username;
 	private String dateTime;
 	private String approveStatus;
-	private int notes_details_id ;	
-
+	private int notes_details_id ;
+	private MultipartFile imageFile;
+	private String image_file_name;
+	private byte[] image;
 	
+	
+	
+	public byte[] getImage() {
+		return image;
+	}
+
+	public void setImage(byte[] image) {
+		this.image = image;
+	}
+
+	public String getImage_file_name() {
+		return image_file_name;
+	}
+
+	public void setImage_file_name(String image_file_name) {
+		this.image_file_name = image_file_name;
+	}
+
+	public MultipartFile getImageFile() {
+		return imageFile;
+	}
+
+	public void setImageFile(MultipartFile imageFile) {
+		this.imageFile = imageFile;
+	}
+
 	public int getNotes_details_id() {
 		return notes_details_id;
 	}

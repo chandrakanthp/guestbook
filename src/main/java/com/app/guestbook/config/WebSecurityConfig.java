@@ -19,8 +19,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
   @Override
   protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-
-    auth.jdbcAuthentication().dataSource(dataSource)
+	  auth.jdbcAuthentication().dataSource(dataSource)
         .usersByUsernameQuery("select username, password, enabled"
             + " from user_details where username=?")
         .authoritiesByUsernameQuery("select username,roles "
@@ -30,10 +29,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
   @Override
   protected void configure(HttpSecurity http) throws Exception {
-
-	  
-
-	  
 	  http.authorizeRequests()
 //	  .antMatchers(").permitAll()
 	  .antMatchers("/viewAllNotes","/approveReject").hasAnyAuthority("ADMIN")
