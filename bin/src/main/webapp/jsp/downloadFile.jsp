@@ -1,4 +1,4 @@
-<%@page import="com.app.guestbook.model.GuestNotesDetails,java.io.*" %> 
+<%@page import="com.app.guestbook.model.GuestNotesDetails,java.io.*" %>
 <%
 GuestNotesDetails data = (GuestNotesDetails)request.getAttribute("guestNotesDetails");
 

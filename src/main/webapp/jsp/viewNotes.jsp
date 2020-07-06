@@ -20,11 +20,13 @@
 			form.submit();		
 		}
 	}
+	/*
 	function logoutApp()
 	{
 			form = document.getElementById("logoutForm");
 			form.submit()
 	}
+	*/
 </script>
 </head>
 <body class="security-app">
@@ -32,13 +34,31 @@
 <input type=hidden name="id" id="id"/>
 <input type=hidden name="status" id="status"/>
 </form>
-<form id="logoutForm" method="get" action="/login">
-</form>
-<div id="status"><h4><font color="green"><%=request.getAttribute("status")!=null?request.getAttribute("status"):"" %></font></h4>
-	
-</div>
+<!-- 
+	<form id="logoutForm" method="get" action="/login">
+	</form> 
+-->
 <div class="container">
-<a href="#" class="f90-logout-button" onclick="logoutApp()" style="text-align:right; "><h4>LogOut</h4></a>
+  		<form:form id="logoutForm" method="POST" action="/logout">
+  			<div class="row">
+  				<div class="col-sm-12">
+      				<div class="pull-right">
+            			<input type="submit" class="btn btn-danger" value="Logout"/>	
+      				</div>
+  				</div>
+  			</div>
+  			<!--  
+  			<h4><a href="#" class="f90-logout-button" onClick="logoutApp()" style="text-align:right; ">LogOut</a></h4>
+  			-->	
+  		</form:form>
+	</div>
+
+<div class="container">
+<!--  
+	<h4><a href="#" class="f90-logout-button" onClick="logoutApp()" style="text-align:right; ">LogOut</a></h4>
+-->
+<div id="status"><h4><font color="green"><%=request.getAttribute("status")!=null?request.getAttribute("status"):"" %></font></h4>	
+</div>
 <h2>Approve/Remove Guest Notes</h2> 
   <div class="row">
     <div class="col-12">

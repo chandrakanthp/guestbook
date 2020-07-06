@@ -1,4 +1,5 @@
 <%@page import="com.app.guestbook.model.GuestNotesDetails,java.io.*" %>
+<%@ page trimDirectiveWhitespaces="true"%>
 <%
 GuestNotesDetails data = (GuestNotesDetails)request.getAttribute("guestNotesDetails");
 
