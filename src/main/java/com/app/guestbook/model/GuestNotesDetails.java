@@ -4,6 +4,12 @@ import java.io.File;
 
 import org.springframework.web.multipart.MultipartFile;
 
+/**
+ * 
+ * @author CHANDRAKANTH
+ * This is DTO class, where getter/setter are implemented
+ *
+ */
 public class GuestNotesDetails {
 	
 	private String notes;

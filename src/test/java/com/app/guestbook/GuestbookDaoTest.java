@@ -1,0 +1,211 @@
+package com.app.guestbook;
+
+import static org.junit.Assert.assertEquals;
+
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.imageio.ImageIO;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+
+import com.app.guestbook.dao.GuestAppDao;
+import com.app.guestbook.dao.GuestAppDaoImpl;
+import com.app.guestbook.model.GuestNotesDetails;
+import com.app.guestbook.service.GuestAppServiceImpl;
+
+@RunWith(MockitoJUnitRunner.class)
+public class GuestbookDaoTest {
+	
+	@Mock
+	JdbcTemplate template;   
+	
+	@Mock
+	NamedParameterJdbcTemplate nameTemplate;    
+	
+	@InjectMocks
+	GuestAppDaoImpl appDao;			
+	
+	
+	@Test
+	public void testInsertNotes()
+	{
+		GuestNotesDetails notes = new GuestNotesDetails("Testing Notes","chandra","2020-05-13 11:28:27","",3,null,null,null);		
+		Mockito.when(nameTemplate.update(Mockito.any(String.class),Mockito.any(MapSqlParameterSource.class))).thenReturn(1);	
+		assertEquals(appDao.insertNotes(notes), 1);
+		
+	}
+	
+	@Test
+	public void testviewAllNotes()
+	{
+		GuestNotesDetails notes[] = new GuestNotesDetails[1];
+		notes[0]=	new GuestNotesDetails("Testing Notes","chandra","2020-05-13 11:28:27","",3,null,null,null);
+		List list = new ArrayList();
+		list.add(notes[0]);
+		Mockito.when(nameTemplate.query(Mockito.any(String.class), Mockito.any(BeanPropertyRowMapper.class))).thenReturn(list);	
+		assertEquals(appDao.viewAllNotes(),notes);
+		
+	}
+	
+	@Test
+	public void testApproveNotes()
+	{		
+		GuestNotesDetails notes = new GuestNotesDetails("Testing Notes","chandra","2020-05-13 11:28:27","",3,null,null,null);		
+		Mockito.when(nameTemplate.update(Mockito.any(String.class),Mockito.any(MapSqlParameterSource.class))).thenReturn(1);	
+		assertEquals(appDao.approveRejectNotes(notes.getNotes_details_id(),"A"), 1);
+	}
+	
+	@Test
+	public void testRejectNotes()
+	{		
+		GuestNotesDetails notes = new GuestNotesDetails("Testing Notes","chandra","2020-05-13 11:28:27","",3,null,null,null);		
+		Mockito.when(nameTemplate.update(Mockito.any(String.class),Mockito.any(MapSqlParameterSource.class))).thenReturn(1);	
+		assertEquals(appDao.approveRejectNotes(notes.getNotes_details_id(),"R"), 1);
+	}
+	
+	@Test
+	public void testGetImage() throws IOException 
+	{
+		BufferedImage result = new BufferedImage(600, 400, BufferedImage.TYPE_INT_RGB);
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		ImageIO.write( result, "jpg", baos );
+		baos.flush();
+		byte[] imageInByte = baos.toByteArray();
+		baos.close();
+		
+		GuestNotesDetails notes[] = new GuestNotesDetails[1];
+		notes[0]=	new GuestNotesDetails("Testing Notes","chandra","2020-05-13 11:28:27","",3,null,null,imageInByte);
+		List list = new ArrayList();
+		list.add(notes[0]);
+	
+		Mockito.when(nameTemplate.query(Mockito.any(String.class),Mockito.any(MapSqlParameterSource.class),Mockito.any(BeanPropertyRowMapper.class))).thenReturn(list);
+        assertEquals(appDao.getImage("1"), notes[0]);		
+	}
+
+	
+
+/*	@Test
+	public void testViewAllNotes() 
+	{
+		List<GuestNotesDetails> list = new ArrayList<GuestNotesDetails>();
+		GuestNotesDetails guestNotesEntry1 = new GuestNotesDetails("Testing Notes","chandra","2020-05-13 10:28:27","",1,null,null,null);
+		GuestNotesDetails guestNotesEntry2 = new GuestNotesDetails("Testing Notes1","chandra","2020-05-13 10:29:30","",2,null,null,null);
+		list.add(guestNotesEntry1);
+		list.add(guestNotesEntry2);
+		
+		GuestNotesDetails[] notesDetails = new GuestNotesDetails[list.size()];
+		notesDetails = list.toArray(notesDetails);
+		Mockito.when(appDao.viewAllNotes()).thenReturn(notesDetails);	
+		GuestNotesDetails[] viewDetails = appDao.viewAllNotes();
+        
+        assertEquals(2, viewDetails.length);
+	}
+	
+	@Test
+	public void testApproveNotes()
+	{
+		GuestNotesDetails guestNotesEntry = new GuestNotesDetails("Testing Notes","chandra","2020-05-13 11:29:27","",1,null,null,null);
+		Mockito.when(appDao.approveRejectNotes(guestNotesEntry.getNotes_details_id(),"A")).thenReturn(1);
+        assertEquals(1, appDao.approveRejectNotes(guestNotesEntry.getNotes_details_id(),"A"));
+        //Mockito.verify(appDao, Mockito.times(1)).approveRejectNotes(1,"A");
+	}
+	
+	@Test
+	public void testRejectNotes()
+	{
+		GuestNotesDetails guestNotesEntry = new GuestNotesDetails("Testing Notes","chandra","2020-05-13 10:28:27","",1,null,null,null);
+		Mockito.when(appDao.approveRejectNotes(guestNotesEntry.getNotes_details_id(),"R")).thenReturn(1);
+        assertEquals(1, appDao.approveRejectNotes(1,"R"));
+	}
+	
+	@Test
+	public void getImage() throws IOException
+	{
+		//appDao.getImage(id);
+		BufferedImage result = new BufferedImage(600, 400, BufferedImage.TYPE_INT_RGB);
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		ImageIO.write( result, "jpg", baos );
+		baos.flush();
+		byte[] imageInByte = baos.toByteArray();
+		baos.close();
+		GuestNotesDetails guestNotesEntry = new GuestNotesDetails("Testing Notes","chandra","2020-05-13 10:28:27","",1,null,null,imageInByte);
+		Mockito.when(appDao.getImage("1")).thenReturn(guestNotesEntry);
+        assertEquals(imageInByte, appDao.getImage("1").getImage());
+	}
+
+	/*
+	@Test
+	public void testViewAllNotes() {
+		List<GuestNotesDetails> list = new ArrayList<GuestNotesDetails>();
+		GuestNotesDetails guestNotesEntry1 = new GuestNotesDetails("Testing Notes","chandra","2020-05-13 10:28:27","",1,null,null,null);
+		GuestNotesDetails guestNotesEntry2 = new GuestNotesDetails("Testing Notes1","chandra","2020-05-13 10:29:30","",2,null,null,null);
+		list.add(guestNotesEntry1);
+		list.add(guestNotesEntry2);
+		
+		GuestNotesDetails[] notesDetails = new GuestNotesDetails[list.size()];
+		notesDetails = list.toArray(notesDetails);
+		Mockito.when(appDao.viewAllNotes()).thenReturn(notesDetails);
+        
+        //test
+		GuestNotesDetails[] viewDetails = GuestAppService.viewAllNotes();
+         
+        assertEquals(2, viewDetails.length);
+        Mockito.verify(appDao, Mockito.times(1)).viewAllNotes();
+		
+	}
+
+	@Test
+	public void testInsertNotes() {
+		GuestNotesDetails guestNotesEntry1 = new GuestNotesDetails("Testing Notes","chandra","2020-05-13 11:28:27","",3,null,null,null);
+		Mockito.when(appDao.insertNotes(guestNotesEntry1)).thenReturn(1);
+        assertEquals(1, GuestAppService.insertNotes(guestNotesEntry1));
+        Mockito.verify(appDao, Mockito.times(1)).insertNotes(guestNotesEntry1);
+		
+	}
+	
+	@Test
+	public void testApproveNotes() {
+		GuestNotesDetails guestNotesEntry = new GuestNotesDetails("Testing Notes","chandra","2020-05-13 11:29:27","",1,null,null,null);
+		Mockito.when(appDao.approveRejectNotes(guestNotesEntry.getNotes_details_id(),"A")).thenReturn(1);
+        assertEquals(1, GuestAppService.approveRejectNotes(guestNotesEntry.getNotes_details_id(),"A"));
+        Mockito.verify(appDao, Mockito.times(1)).approveRejectNotes(1,"A");
+	}
+	
+	@Test
+	public void testRejectNotes() {
+		GuestNotesDetails guestNotesEntry = new GuestNotesDetails("Testing Notes","chandra","2020-05-13 10:28:27","",1,null,null,null);
+		Mockito.when(appDao.approveRejectNotes(guestNotesEntry.getNotes_details_id(),"R")).thenReturn(1);
+        assertEquals(1, GuestAppService.approveRejectNotes(1,"R"));
+	}
+	
+	@Test
+	public void testViewImage() throws IOException {
+		//appDao.getImage(id);
+		BufferedImage result = new BufferedImage(600, 400, BufferedImage.TYPE_INT_RGB);
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		ImageIO.write( result, "jpg", baos );
+		baos.flush();
+		byte[] imageInByte = baos.toByteArray();
+		baos.close();
+		GuestNotesDetails guestNotesEntry = new GuestNotesDetails("Testing Notes","chandra","2020-05-13 10:28:27","",1,null,null,imageInByte);
+		Mockito.when(appDao.getImage("1")).thenReturn(guestNotesEntry);
+        assertEquals(imageInByte, GuestAppService.getImage("1").getImage());		
+	}
+	*/
+	
+}

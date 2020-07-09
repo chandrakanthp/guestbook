@@ -1,5 +1,11 @@
 package com.app.guestbook.model;
 
+/**
+ * 
+ * @author CHANDRAKANTH
+ * This class had the information of user details
+ *
+ */
 public class UserLoginInfo {
 
 	private String username;
