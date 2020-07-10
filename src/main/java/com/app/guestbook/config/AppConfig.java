@@ -48,13 +48,4 @@ public class AppConfig {
   public NamedParameterJdbcTemplate createNamedParamJdbcTemplate(@Autowired @Qualifier("dataSource") DataSource dataSource){
       return new NamedParameterJdbcTemplate(dataSource);
   }
-  /*
-
-  @Bean
-public InternalResourceViewResolver viewResolver() {
-InternalResourceViewResolver resolver = new InternalResourceViewResolver();
-resolver.setPrefix("/WEB-INF/jsp/");
-resolver.setSuffix(".jsp");
-return resolver;
-}   */
 }
