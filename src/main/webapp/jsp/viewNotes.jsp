@@ -20,13 +20,6 @@
 			form.submit();		
 		}
 	}
-	/*
-	function logoutApp()
-	{
-			form = document.getElementById("logoutForm");
-			form.submit()
-	}
-	*/
 </script>
 </head>
 <body class="security-app">
@@ -34,10 +27,6 @@
 <input type=hidden name="id" id="id"/>
 <input type=hidden name="status" id="status"/>
 </form>
-<!-- 
-	<form id="logoutForm" method="get" action="/login">
-	</form> 
--->
 <div class="container">
   		<form:form id="logoutForm" method="POST" action="/logout">
   			<div class="row">
@@ -47,17 +36,11 @@
       				</div>
   				</div>
   			</div>
-  			<!--  
-  			<h4><a href="#" class="f90-logout-button" onClick="logoutApp()" style="text-align:right; ">LogOut</a></h4>
-  			-->	
   		</form:form>
 	</div>
 
 <div class="container">
-<!--  
-	<h4><a href="#" class="f90-logout-button" onClick="logoutApp()" style="text-align:right; ">LogOut</a></h4>
--->
-<div id="status"><h4><font color="green"><%=request.getAttribute("status")!=null?request.getAttribute("status"):"" %></font></h4>	
+<div id="status"><h4><font color="green">${status}</font></h4>	
 </div>
 <h2>Approve/Remove Guest Notes</h2> 
   <div class="row">
@@ -75,13 +58,15 @@
         </thead>
         <tbody>        
   		<%
-  			GuestNotesDetails[] 	guestNotesDetails =  (GuestNotesDetails[]) request.getAttribute("guestNotesDetails");
-			for(int i=0;i<guestNotesDetails.length;i++)
-			{
+  			//GuestNotesDetails[] 	guestNotesDetails =  (GuestNotesDetails[]) request.getAttribute("guestNotesDetails");
+  		GuestNotesDetails[] guestNotesDetails = (GuestNotesDetails[])(pageContext.findAttribute("guestNotesDetails"));
+ 	
+  		for(int i=0;i<guestNotesDetails.length;i++)
+		{
 		%>
 	  	<tr>
             <td scope="row"><%=i+1%></td>
-            <td><%=guestNotesDetails[i].getDateTime() %></td>
+            <td><%=guestNotesDetails[i].toDateFormat() %></td>
             <td><%=guestNotesDetails[i].getUsername() %></td>
             <td><%=guestNotesDetails[i].getNotes() %></td>
             <td>
@@ -97,7 +82,13 @@
 				<% if("N".equalsIgnoreCase(guestNotesDetails[i].getApproveStatus())){ %>
               		<button type="button" class="btn btn-success" id="appr<%=guestNotesDetails[i].getNotes_details_id()%>" onclick="approveReject('approve','<%=guestNotesDetails[i].getNotes_details_id()%>')"><i class="fas fa-edit">Approve</i></button>
             		<button type="button" class="btn btn-danger" id="rej<%=guestNotesDetails[i].getNotes_details_id()%>" onclick="approveReject('remove','<%=guestNotesDetails[i].getNotes_details_id()%>')"><i class="far fa-trash-alt">Remove</i></button>
-         		<% } %>
+         		<% }
+				else if("A".equalsIgnoreCase(guestNotesDetails[i].getApproveStatus())){ 
+				%>
+				Approved
+				<%
+				}
+				%>
             </td>
           </tr>        
 			<% } %>          

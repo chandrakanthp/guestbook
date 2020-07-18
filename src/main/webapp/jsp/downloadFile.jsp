@@ -1,7 +1,7 @@
 <%@page import="com.app.guestbook.model.GuestNotesDetails,java.io.*" %>
 <%@ page trimDirectiveWhitespaces="true"%>
 <%
-GuestNotesDetails data = (GuestNotesDetails)request.getAttribute("guestNotesDetails");
+GuestNotesDetails data = (GuestNotesDetails)pageContext.findAttribute("guestNotesDetails");
 
 //response.setHeader("Content-Type", "image/jpeg");
 response.setContentType("image/jpeg");

@@ -6,6 +6,7 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.imageio.ImageIO;
@@ -34,8 +35,8 @@ public class GuestbookServiceTests {
 	@Test
 	public void testViewAllNotes() {
 		List<GuestNotesDetails> list = new ArrayList<GuestNotesDetails>();
-		GuestNotesDetails guestNotesEntry1 = new GuestNotesDetails("Testing Notes","chandra","2020-05-13 10:28:27","",1,null,null,null);
-		GuestNotesDetails guestNotesEntry2 = new GuestNotesDetails("Testing Notes1","chandra","2020-05-13 10:29:30","",2,null,null,null);
+		GuestNotesDetails guestNotesEntry1 = new GuestNotesDetails("Testing Notes","chandra",new Date(),"N",1,null,null,null);
+		GuestNotesDetails guestNotesEntry2 = new GuestNotesDetails("Testing Notes1","chandra",new Date(),"N",2,null,null,null);
 		list.add(guestNotesEntry1);
 		list.add(guestNotesEntry2);
 		
@@ -53,7 +54,7 @@ public class GuestbookServiceTests {
 
 	@Test
 	public void testInsertNotes() {
-		GuestNotesDetails guestNotesEntry = new GuestNotesDetails("Testing Notes","chandra","2020-05-13 11:28:27","",3,null,null,null);
+		GuestNotesDetails guestNotesEntry = new GuestNotesDetails("Testing Notes","chandra",new Date(),"N",3,null,null,null);
 		Mockito.when(appDao.insertNotes(guestNotesEntry)).thenReturn(1);
         assertEquals(1, GuestAppService.insertNotes(guestNotesEntry));
         Mockito.verify(appDao, Mockito.times(1)).insertNotes(guestNotesEntry);
@@ -62,7 +63,7 @@ public class GuestbookServiceTests {
 	
 	@Test
 	public void testApproveNotes() {
-		GuestNotesDetails guestNotesEntry = new GuestNotesDetails("Testing Notes","chandra","2020-05-13 11:29:27","",1,null,null,null);
+		GuestNotesDetails guestNotesEntry = new GuestNotesDetails("Testing Notes","chandra",new Date(),"N",1,null,null,null);
 		Mockito.when(appDao.approveRejectNotes(guestNotesEntry.getNotes_details_id(),"A")).thenReturn(1);
         assertEquals(1, GuestAppService.approveRejectNotes(guestNotesEntry.getNotes_details_id(),"A"));
         Mockito.verify(appDao, Mockito.times(1)).approveRejectNotes(1,"A");
@@ -70,7 +71,7 @@ public class GuestbookServiceTests {
 	
 	@Test
 	public void testRejectNotes() {
-		GuestNotesDetails guestNotesEntry = new GuestNotesDetails("Testing Notes","chandra","2020-05-13 10:28:27","",1,null,null,null);
+		GuestNotesDetails guestNotesEntry = new GuestNotesDetails("Testing Notes","chandra",new Date(),"N",1,null,null,null);
 		Mockito.when(appDao.approveRejectNotes(guestNotesEntry.getNotes_details_id(),"R")).thenReturn(1);
         assertEquals(1, GuestAppService.approveRejectNotes(1,"R"));
 	}
@@ -84,7 +85,7 @@ public class GuestbookServiceTests {
 		baos.flush();
 		byte[] imageInByte = baos.toByteArray();
 		baos.close();
-		GuestNotesDetails guestNotesEntry = new GuestNotesDetails("Testing Notes","chandra","2020-05-13 10:28:27","",1,null,null,imageInByte);
+		GuestNotesDetails guestNotesEntry = new GuestNotesDetails("Testing Notes","chandra",new Date(),"N",1,null,null,imageInByte);
 		Mockito.when(appDao.getImage("1")).thenReturn(guestNotesEntry);
         assertEquals(imageInByte, GuestAppService.getImage("1").getImage());		
 	}
@@ -92,7 +93,7 @@ public class GuestbookServiceTests {
 	@Test
 	public void testNegativeInsertNotes() {
 		//username should not be null
-		GuestNotesDetails guestNotesEntry = new GuestNotesDetails("Testing please Ignore",null,"2020-05-13 11:28:27","",3,null,null,null);
+		GuestNotesDetails guestNotesEntry = new GuestNotesDetails("Testing please Ignore",null,new Date(),"N",3,null,null,null);
 		Mockito.when(appDao.insertNotes(guestNotesEntry)).thenReturn(0);
         assertEquals(0, GuestAppService.insertNotes(guestNotesEntry));
         Mockito.verify(appDao, Mockito.times(1)).insertNotes(guestNotesEntry);

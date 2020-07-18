@@ -1,6 +1,7 @@
 package com.app.guestbook.model;
 
-import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import org.springframework.web.multipart.MultipartFile;
 
@@ -14,7 +15,7 @@ public class GuestNotesDetails {
 	
 	private String notes;
 	private String username;
-	private String dateTime;
+	private Date dateTime;
 	private String approveStatus;
 	private int notes_details_id ;
 	private MultipartFile imageFile;
@@ -25,7 +26,7 @@ public class GuestNotesDetails {
 		
 	}
 	
-	public GuestNotesDetails(String notes, String username, String dateTime, String approveStatus, int notes_details_id,
+	public GuestNotesDetails(String notes, String username, Date dateTime, String approveStatus, int notes_details_id,
 			MultipartFile imageFile, String image_file_name, byte[] image) {
 		super();
 		this.notes = notes;
@@ -93,12 +94,22 @@ public class GuestNotesDetails {
 	public void setNotes(String notes) {
 		this.notes = notes;
 	}
-
-	public String getDateTime() {
+	public Date getDateTime() {
 		return dateTime;
 	}
 
-	public void setDateTime(String dateTime) {
+	public String toDateFormat() {
+	
+		try
+		{
+			SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/YYYY HH:mm:ss");
+			return sdf.format(getDateTime());
+		}
+		catch(Exception e) {}
+		return "";
+	}
+
+	public void setDateTime(Date dateTime) {
 		this.dateTime = dateTime;
 	}
 	

@@ -1,6 +1,7 @@
 package com.app.guestbook.service;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +21,7 @@ public class GuestAppServiceImpl implements GuestAppService{
 	@Autowired
 	GuestAppDao appDao;
 	
-	Logger logger = Logger.getLogger(this.getClass());
+	Logger logger = LogManager.getLogger(this.getClass());
 	
 	/**
 	 * @param GuestNotesDetails
@@ -46,7 +47,7 @@ public class GuestAppServiceImpl implements GuestAppService{
 	 */
 	public int approveRejectNotes(int id, String value)
 	{
-		logger.debug("Inside approveRejectNotes");
+		logger.debug("Inside approveRejectNotes id : {}, value : {}",id,value);
 		return appDao.approveRejectNotes(id,value);
 
 	}
@@ -56,7 +57,7 @@ public class GuestAppServiceImpl implements GuestAppService{
 	 */
 	public GuestNotesDetails getImage(String id)
 	{
-		logger.debug("Inside getImage");
+		logger.debug("Inside getImage notes id: {}",id);
 		return appDao.getImage(id);
 	}
 }

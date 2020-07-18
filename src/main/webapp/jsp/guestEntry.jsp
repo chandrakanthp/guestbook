@@ -50,8 +50,8 @@
   
 	<form:form style="width:300px" action="/insertNotes" modelAttribute="guestNotesDetails" enctype="multipart/form-data">  
 	  	<div class="form-group">  
-	    	<label for="Notes">Notes</label>  
-	    	<form:textarea type="text" class="form-control" path="notes" placeholder="enter notes" />  
+	    	<label for="Notes">Notes<font color="red">*</font></label>  
+	    	<form:textarea type="text" class="form-control" path="notes" placeholder="enter notes" required="true"/>  
 	  	</div>     
   		
   			<div class="form-group">  

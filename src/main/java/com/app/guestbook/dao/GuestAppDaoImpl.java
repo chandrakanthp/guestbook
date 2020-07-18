@@ -1,9 +1,9 @@
 package com.app.guestbook.dao;
 
-import java.util.HashMap;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -32,7 +32,7 @@ public class GuestAppDaoImpl implements GuestAppDao {
 	@Autowired
 	NamedParameterJdbcTemplate nameTemplate;    
 	
-	Logger logger = Logger.getLogger(this.getClass());
+	Logger logger = LogManager.getLogger(this.getClass());
 
 	/**
 	 * @param GuestNotesDetails
@@ -45,7 +45,7 @@ public class GuestAppDaoImpl implements GuestAppDao {
 		logger.debug("Start of insertNotes method");
 		String sql="insert into guest_notes_details(username,notes,image,image_file_name) "
 		 		+ " values(:name,:notes,:image,:image_file_name)"; 
-		logger.debug("insert sql : "+sql);
+		logger.debug("insert sql : {} ",sql);
 		byte[] image = null;
 		String image_file_name = null;
 		 try
@@ -54,7 +54,7 @@ public class GuestAppDaoImpl implements GuestAppDao {
 			 image_file_name = notes.getImageFile().getOriginalFilename();
 		 }catch(Exception e)
 		 {
-			 logger.error("Error while inserting notes : "+e.getMessage());
+			 logger.error("Error while inserting notes : {} ",e.getMessage());
 		 }
 		 
 		 MapSqlParameterSource params = new MapSqlParameterSource();
@@ -81,7 +81,7 @@ public class GuestAppDaoImpl implements GuestAppDao {
 				"    notes as notes, " + 
 				"  image_file_name as image_file_name, "+
 				"     approveStatus as approveStatus from guest_notes_details ";
-		logger.debug("viewAllNotes sql : "+sql);
+		logger.debug("viewAllNotes sql : {} ",sql);
 		List details = nameTemplate.query(sql, new BeanPropertyRowMapper(GuestNotesDetails.class));
 		if(details != null)
 		{
@@ -105,7 +105,7 @@ public class GuestAppDaoImpl implements GuestAppDao {
 			sql = "delete from guest_notes_details "
 					+ " where notes_details_id=:notes_details_id ";
 		
-		logger.debug("approveRejectNotes sql :"+sql);
+		logger.debug("approveRejectNotes sql : {} ",sql);
 		
 		MapSqlParameterSource params = new MapSqlParameterSource();
 		params.addValue("approveStatus", value)
@@ -126,7 +126,7 @@ public class GuestAppDaoImpl implements GuestAppDao {
 				"  image_file_name as image_file_name, image as image "+
 				"     from guest_notes_details where notes_details_id=:notes_details_id ";
 		
-		logger.debug("sql : "+sql); 
+		logger.debug("sql : {} ",sql); 
 		MapSqlParameterSource params = new MapSqlParameterSource();
 		params.addValue("notes_details_id", id);
 		List details = nameTemplate.query(sql,params, new BeanPropertyRowMapper(GuestNotesDetails.class));
