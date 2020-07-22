@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
-<%@ page import="com.app.guestbook.model.GuestNotesDetails" %> 
+<%@ page import="com.app.guestbook.model.GuestNotesDetails, java.util.List" %> 
 <!DOCTYPE html>
 <html>
 <head>
@@ -59,30 +59,31 @@
         </thead>
         <tbody>        
   		<%
-  		GuestNotesDetails[] guestNotesDetails = (GuestNotesDetails[])(pageContext.findAttribute("guestNotesDetails"));
- 		for(int i=0;i<guestNotesDetails.length;i++)
+  		int i=0;
+  		List<GuestNotesDetails> guestNotesDetails = (List<GuestNotesDetails>)(pageContext.findAttribute("guestNotesDetails"));
+		for(GuestNotesDetails guestNotesDetail:guestNotesDetails)
 		{
 		%>
 	  	<tr>
-            <td scope="row"><%=i+1%></td>
-            <td><%=guestNotesDetails[i].toDateFormat() %></td>
-            <td><%=guestNotesDetails[i].getUsername() %></td>
-            <td><%=guestNotesDetails[i].getNotes() %></td>
+            <td scope="row"><%=++i%></td>
+            <td><%=guestNotesDetail.toDateFormat() %></td>
+            <td><%=guestNotesDetail.getUsername() %></td>
+            <td><%=guestNotesDetail.getNotes() %></td>
             <td>
             <%
-            if(guestNotesDetails[i].getImage_file_name() != null)
+            if(guestNotesDetail.getImage_file_name() != null)
             {
             %>
-            	<a href="/viewImage?id=<%=guestNotesDetails[i].getNotes_details_id()%>" ><%=guestNotesDetails[i].getImage_file_name()%> </a>
+            	<a href="/viewImage?id=<%=guestNotesDetail.getNotes_details_id()%>" ><%=guestNotesDetail.getImage_file_name()%> </a>
             <% } else {	}
              %>
             </td>
             <td>              
-				<% if("N".equalsIgnoreCase(guestNotesDetails[i].getApproveStatus())){ %>
-              		<button type="button" class="btn btn-success" id="appr<%=guestNotesDetails[i].getNotes_details_id()%>" onclick="approveReject('approve','<%=guestNotesDetails[i].getNotes_details_id()%>')">Approve</button>
-            		<button type="button" class="btn btn-danger" id="rej<%=guestNotesDetails[i].getNotes_details_id()%>" onclick="approveReject('remove','<%=guestNotesDetails[i].getNotes_details_id()%>')">Remove</button>
+				<% if("N".equalsIgnoreCase(guestNotesDetail.getApproveStatus())){ %>
+              		<button type="button" class="btn btn-success" id="appr<%=guestNotesDetail.getNotes_details_id()%>" onclick="approveReject('approve','<%=guestNotesDetail.getNotes_details_id()%>')">Approve</button>
+            		<button type="button" class="btn btn-danger" id="rej<%=guestNotesDetail.getNotes_details_id()%>" onclick="approveReject('remove','<%=guestNotesDetail.getNotes_details_id()%>')">Remove</button>
          		<% }
-				else if("A".equalsIgnoreCase(guestNotesDetails[i].getApproveStatus())){ 
+				else if("A".equalsIgnoreCase(guestNotesDetail.getApproveStatus())){ 
 				%>
 					Approved
 				<%

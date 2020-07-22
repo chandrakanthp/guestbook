@@ -42,12 +42,12 @@ public class GuestbookServiceTests {
 		
 		GuestNotesDetails[] notesDetails = new GuestNotesDetails[list.size()];
 		notesDetails = list.toArray(notesDetails);
-		Mockito.when(appDao.viewAllNotes()).thenReturn(notesDetails);
+		Mockito.when(appDao.viewAllNotes()).thenReturn(list);
         
         //test
-		GuestNotesDetails[] viewDetails = GuestAppService.viewAllNotes();
+		List<GuestNotesDetails> viewDetails = GuestAppService.viewAllNotes();
          
-        assertEquals(2, viewDetails.length);
+        assertEquals(2, viewDetails.size());
         Mockito.verify(appDao, Mockito.times(1)).viewAllNotes();
 		
 	}

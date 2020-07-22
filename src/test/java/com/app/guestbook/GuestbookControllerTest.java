@@ -12,6 +12,8 @@ import java.util.Date;
 import java.util.List;
 
 import javax.imageio.ImageIO;
+
+import org.assertj.core.util.Arrays;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -82,8 +84,9 @@ public class GuestbookControllerTest {
 	@Test
 	public void testViewAllNotes() throws Exception
 	{
-		GuestNotesDetails[] notes = new GuestNotesDetails[1];
-		notes[0]=new GuestNotesDetails("Testing Notes","chandra",new Date(),"N",3,null,null,null);	
+		List<GuestNotesDetails> notes = new ArrayList();
+		GuestNotesDetails note=new GuestNotesDetails("Testing Notes","chandra",new Date(),"N",3,null,null,null);	
+		notes.add(note);
 		Mockito.when(appService.viewAllNotes()).thenReturn(notes);	
 		mockMvc.perform(get("/viewAllNotes")).andExpect(MockMvcResultMatchers.status().is2xxSuccessful());
 	}

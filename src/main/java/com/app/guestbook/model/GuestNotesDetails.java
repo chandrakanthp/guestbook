@@ -1,6 +1,7 @@
 package com.app.guestbook.model;
 
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 
 import org.springframework.web.multipart.MultipartFile;
@@ -112,7 +113,11 @@ public class GuestNotesDetails {
 	public void setDateTime(Date dateTime) {
 		this.dateTime = dateTime;
 	}
-	
-	
 
+	@Override
+	public String toString() {
+		return "GuestNotesDetails [notes=" + notes + ", username=" + username + ", dateTime=" + dateTime
+				+ ", approveStatus=" + approveStatus + ", notes_details_id=" + notes_details_id + ", imageFile="
+				+ imageFile + ", image_file_name=" + image_file_name + "]";
+	}
 }

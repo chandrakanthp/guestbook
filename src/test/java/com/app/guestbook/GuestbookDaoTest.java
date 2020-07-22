@@ -54,7 +54,7 @@ public class GuestbookDaoTest {
 		List<GuestNotesDetails> list = new ArrayList<>();
 		list.add(notes[0]);
 		Mockito.when(nameTemplate.query(Mockito.any(String.class), Mockito.any(BeanPropertyRowMapper.class))).thenReturn(list);	
-		assertEquals(appDao.viewAllNotes(),notes);		
+		assertEquals(appDao.viewAllNotes(),list);		
 	}
 	
 	@Test

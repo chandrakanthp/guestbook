@@ -1,5 +1,13 @@
 package com.app.guestbook.controller;
 
+import java.io.IOException;
+import java.security.Principal;
+import java.util.Collection;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +15,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,15 +26,6 @@ import com.app.guestbook.model.GuestNotesDetails;
 import com.app.guestbook.model.UserLoginInfo;
 import com.app.guestbook.service.GuestAppService;
 
-import java.io.IOException;
-import java.security.Principal;
-import java.util.Collection;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.springframework.ui.Model;
-
 /**
  * 
  * @author CHANDRAKANTH
@@ -35,6 +35,8 @@ import org.springframework.ui.Model;
 @Controller
 public class GuestAppController {
 
+	 public static final String ADMIN_ROLE_NAME = "ADMIN";
+	
 	@Autowired
 	GuestAppService appService;
 	
@@ -51,15 +53,15 @@ public class GuestAppController {
 	 */
 	@GetMapping("/")
 	public RedirectView homePage(Model model, Principal principal,@ModelAttribute UserLoginInfo userLoginInfo) {
-		logger.debug("Start of homePage");
+		logger.info("Start of homePage");
 		getLogedUser();
 		Collection<SimpleGrantedAuthority> roles = getRoles();
-		if(roles.stream().anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ADMIN")))
+		if(roles.stream().anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals(ADMIN_ROLE_NAME)))
 		{
-			logger.debug("Admin role, so redirecting to viewAllNotes page");
+			logger.info("Admin role, so redirecting to viewAllNotes page");
 			return new RedirectView("/viewAllNotes");
 		}
-		logger.debug("End of homePage");
+		logger.info("End of homePage");
 		return new RedirectView("/guestNotes");
 	 }
 	
@@ -73,7 +75,7 @@ public class GuestAppController {
 	 */
 	@GetMapping("/login")
 	public String index(Model model, Principal principal,@ModelAttribute UserLoginInfo userLoginInfo) {
-		logger.debug("start of index method of Login path user: {}",userLoginInfo.getUsername());
+		logger.debug("start of index method of Login path user: {}",userLoginInfo);
 		return "login";
 	}
   
@@ -85,9 +87,9 @@ public class GuestAppController {
 	 */
 	@GetMapping("/guestNotes")
 	public String guestNotes(Model model,@ModelAttribute GuestNotesDetails guestNotesDetails) {
-		logger.debug("Start of guestNotes method GuestNotesDetails: {} ",guestNotesDetails.getNotes());
+		logger.debug("Start of guestNotes method GuestNotesDetails: {} ",guestNotesDetails);
 		model.addAttribute("message", "You are logged in as ");
-		logger.debug("End of guestNotes method");
+		logger.info("End of guestNotes method");
 		return "guestEntry";
 	}
 
@@ -102,12 +104,13 @@ public class GuestAppController {
 	 */
 	@PostMapping("/insertNotes")
 	public String insertNotes(HttpServletRequest request, Model model,@ModelAttribute GuestNotesDetails guestNotesDetails) {
-		logger.debug("Start of insertNotes method");
-		guestNotesDetails.setUsername(getLogedUser());
+		logger.info("Start of insertNotes method");
+		guestNotesDetails.setUsername(getLogedUser());		
+		logger.debug("GuestNotesDetails : {} ",guestNotesDetails);
 		int resStatus = appService.insertNotes(guestNotesDetails);
 		logger.debug("resStatus : {} ",resStatus);
-		request.setAttribute("resStatus", (resStatus==1?"Added Successfully":"Error while adding"));
-		logger.debug("End of insertNotes method");
+		model.addAttribute("resStatus",(resStatus==1?"Added Successfully":"Error while adding"));
+		logger.info("End of insertNotes method");
 		return "guestEntry";
 	}
   
@@ -120,14 +123,12 @@ public class GuestAppController {
 	 */
 	@GetMapping("/viewAllNotes")
 	public String viewAllNotes(HttpServletRequest request, Model model) {
-		logger.debug("Start of viewAllNotes method");
-		GuestNotesDetails[] guestNotesDetails =  appService.viewAllNotes();
-		//request.setAttribute("guestNotesDetails", guestNotesDetails);
-		//request.setAttribute("status", request.getParameter("status"));	
+		logger.info("Start of viewAllNotes method");
+		List<GuestNotesDetails> guestNotesDetails =  appService.viewAllNotes();
 		model.addAttribute("guestNotesDetails", guestNotesDetails);
 		model.addAttribute("status", request.getParameter("status") !=null?request.getParameter("status"):"");
 
-		logger.debug("End of viewAllNotes method");
+		logger.info("End of viewAllNotes method");
 		return "viewNotes";
 	}
   
@@ -142,14 +143,21 @@ public class GuestAppController {
 	 */
 	@GetMapping("/approveReject")
 	public RedirectView approveReject(HttpServletRequest request, HttpServletResponse response,Model model) throws IOException {
-		logger.debug("Start of approveReject method");
+		logger.info("Start of approveReject method");
 		logger.debug("ID: {} ",request.getParameter("id"));
 		logger.debug("status: {} ",request.getParameter("status"));
 		String status="N";
+		String displayStatus="";
 		if(request.getParameter("status").equalsIgnoreCase("approve"))
+		{
 			status="A";
+			displayStatus="Approved Successfully";
+		}
 		else  if(request.getParameter("status").equalsIgnoreCase("remove"))
+		{
 			status="R";
+			displayStatus="Removed Successfully";
+		}
 		else
 		{
 			request.setAttribute("status", "Error");
@@ -162,7 +170,7 @@ public class GuestAppController {
 		{
 			request.setAttribute("status", "Error");
 		}
-		return new RedirectView("/viewAllNotes?status="+(returnSts==1?"Updated Successfully":"Error"));   
+		return new RedirectView("/viewAllNotes?status="+(returnSts==1?displayStatus:"Error"));   
 	}
   
 	/**
@@ -172,9 +180,9 @@ public class GuestAppController {
 	 */
 	@GetMapping("/roles")
 	public String roles() {
-		logger.debug("Start of roles method");
+		logger.info("Start of roles method");
 		getRoles();
-		logger.debug("End of roles method");
+		logger.info("End of roles method");
 		return "index";
 	}
   
@@ -189,7 +197,7 @@ public class GuestAppController {
 		logger.debug("Start of viewImage method notes id : {} ",id);
 		GuestNotesDetails data = appService.getImage(id);
 		model.addAttribute("guestNotesDetails", data);
-		logger.debug("End of viewImage method");
+		logger.info("End of viewImage method");
 		return "downloadFile";
 	}
 

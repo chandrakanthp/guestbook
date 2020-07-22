@@ -10,6 +10,7 @@ public class UserLoginInfo {
 
 	private String username;
 	private String password;
+	
 	public String getUsername() {
 		return username;
 	}
@@ -23,6 +24,8 @@ public class UserLoginInfo {
 		this.password = password;
 	}
 	
-	
-	
+	@Override
+	public String toString() {
+		return "UserLoginInfo [username=" + username + ", password=" + password + "]";
+	}	
 }

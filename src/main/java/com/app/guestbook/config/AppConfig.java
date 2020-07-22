@@ -7,9 +7,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.env.Environment;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
@@ -25,21 +25,30 @@ import com.ulisesbocchio.jasyptspringboot.annotation.EnableEncryptableProperties
 @Configuration
 @EnableEncryptableProperties
 public class AppConfig {
-
-  @Autowired
-  private Environment env;
+  
+  @Value("${spring.datasource.driver-class-name}")
+  private String driverClassName;
+  
+  @Value("${spring.datasource.url}")
+  private String datasourceUrl;
+  
+  @Value("${db.usr.key}")
+  private String datasourceUserName;
+  
+  @Value("${db.pwd.key}")
+  private String datasourcePwd;  
   
   Logger logger = LogManager.getLogger(this.getClass());
-
+  
   
   @Bean(name = "dataSource")
   public DataSource getDataSource() {
-	logger.debug("Start of getDataSource method:");
+	logger.info("Start of getDataSource method:");
     BasicDataSource dataSource = new BasicDataSource();
-    dataSource.setDriverClassName(env.getProperty("mysql.driver"));
-    dataSource.setUrl(env.getProperty("mysql.jdbcUrl"));
-    dataSource.setUsername(env.getProperty("mysql.username"));
-    dataSource.setPassword(env.getProperty("mysql.password"));
+    dataSource.setDriverClassName(driverClassName);
+    dataSource.setUrl(datasourceUrl);
+    dataSource.setUsername(datasourceUserName);
+    dataSource.setPassword(datasourcePwd);
     logger.debug("End of getDataSource method mysql.driver : {} mysql.jdbcUrl : {} ",dataSource.getDriverClassName(), dataSource.getUrl());
     return dataSource;
   }

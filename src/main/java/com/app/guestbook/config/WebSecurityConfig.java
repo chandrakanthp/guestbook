@@ -24,7 +24,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   @Autowired
   private DataSource dataSource;
   
-	Logger logger = LogManager.getLogger(this.getClass());
+  public static final String ADMIN_ROLE_NAME = "ADMIN";
+  public static final String GUEST_ROLE_NAME = "GUEST";
+  
+  Logger logger = LogManager.getLogger(this.getClass());
 
   /**
    * @param AuthenticationManagerBuild
@@ -34,32 +37,33 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
    */
   @Override
   protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-	  logger.debug("Start of configure method of AuthenticationManager Builder");
+	  logger.info("Start of configure method of AuthenticationManager Builder");
 	  auth.jdbcAuthentication().dataSource(dataSource)
         .usersByUsernameQuery("select username, password, enabled"
             + " from user_details where username=?")
         .authoritiesByUsernameQuery("select username,roles "
             + "from user_roles where username=?")
         .passwordEncoder(new BCryptPasswordEncoder());
-	  logger.debug("End of configure method of AuthenticationManager Builder");
+	  logger.info("End of configure method of AuthenticationManager Builder");
   }
 
   /**
    * @param http
    * This configure method helps to authorize the user based on the role
+   * guestNotes path is the landing page for Guest role, where user can input the text (or) upload image to add
    */
   @Override
   protected void configure(HttpSecurity http) throws Exception {
 	  logger.debug("Start of configure method of HttpSecurity authorizeRequests : {}",http.authorizeRequests());
 	  http.authorizeRequests()
-	  .antMatchers("/viewAllNotes","/approveReject").hasAnyAuthority("ADMIN")
-	  .antMatchers("/guestNotes","/insertNotes","/").hasAnyAuthority("ADMIN", "GUEST")
+	  .antMatchers("/viewAllNotes","/approveReject").hasAnyAuthority(ADMIN_ROLE_NAME)
+	  .antMatchers("/guestNotes","/insertNotes","/").hasAnyAuthority(ADMIN_ROLE_NAME, GUEST_ROLE_NAME)
 	  .anyRequest().authenticated()
 	  .and()
 	  .formLogin().loginPage("/login").usernameParameter("username").passwordParameter("password").permitAll()
 	  .and()
 	  .logout().permitAll();
-	  logger.debug("End of configure method of HttpSecurity");
+	  logger.info("End of configure method of HttpSecurity");
   
   }  
 

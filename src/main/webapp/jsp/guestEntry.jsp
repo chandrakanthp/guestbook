@@ -25,9 +25,8 @@
 		</div>
 	</div>
 	</nav>  
-	<div class="container">	
-	<div id="status"><h4><font color="green"><%=request.getAttribute("resStatus")!=null?request.getAttribute("resStatus"):"" %></font></h4>	
-	</div>  	  
+	<div class="container">		
+	<div id="status"><h4><font color="green">${resStatus}</font></h4></div>	  	  
 	<form:form action="/insertNotes" modelAttribute="guestNotesDetails" enctype="multipart/form-data">
 	<h2 class="text-center">Enter Notes or select a image</h2>  
 	  	<div class="form-group purple-border">  

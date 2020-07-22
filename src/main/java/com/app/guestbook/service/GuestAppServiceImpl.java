@@ -1,5 +1,7 @@
 package com.app.guestbook.service;
 
+import java.util.List;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +38,7 @@ public class GuestAppServiceImpl implements GuestAppService{
 	/**
 	 * This viewAllNotes method helps in getting the all the details
 	 */
-	public GuestNotesDetails[] viewAllNotes()
+	public List<GuestNotesDetails> viewAllNotes() 
 	{
 		logger.debug("Inside viewAllNotes");
 		return appDao.viewAllNotes();
