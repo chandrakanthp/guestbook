@@ -1,7 +1,6 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
-<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
-<%@ page import="com.app.guestbook.model.GuestNotesDetails, java.util.List" %> 
+<%@page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -41,8 +40,7 @@
 	</div>
 </nav>  
 <div class="container">
-<div id="status"><h4><font color="green">${status}</font></h4>	
-</div>
+<div id="status"><h4><font color="green">${status}</font></h4></div>
 <h2>Approve/Remove Guest Notes</h2> 
   <div class="row">
     <div class="col-12">
@@ -57,41 +55,29 @@
             <th scope="col">Actions</th>
           </tr>
         </thead>
-        <tbody>        
-  		<%
-  		int i=0;
-  		List<GuestNotesDetails> guestNotesDetails = (List<GuestNotesDetails>)(pageContext.findAttribute("guestNotesDetails"));
-		for(GuestNotesDetails guestNotesDetail:guestNotesDetails)
-		{
-		%>
-	  	<tr>
-            <td scope="row"><%=++i%></td>
-            <td><%=guestNotesDetail.toDateFormat() %></td>
-            <td><%=guestNotesDetail.getUsername() %></td>
-            <td><%=guestNotesDetail.getNotes() %></td>
+        <tbody> 
+        <c:forEach var="guestNotesDetails" items="${guestNotesDetails}" varStatus="loop">
+        <tr>
+            <td scope="row">${loop.count}</td>
+            <td>${guestNotesDetails.toDateFormat()}</td>
+            <td>${guestNotesDetails.getUsername()}</td>
+            <td>${guestNotesDetails.getNotes()}</td>            
             <td>
-            <%
-            if(guestNotesDetail.getImage_file_name() != null)
-            {
-            %>
-            	<a href="/viewImage?id=<%=guestNotesDetail.getNotes_details_id()%>" ><%=guestNotesDetail.getImage_file_name()%> </a>
-            <% } else {	}
-             %>
+            	<c:if test="${guestNotesDetails.getImage_file_name() != null}">      
+	            	<a href="/viewImage?id=${guestNotesDetails.getNotes_details_id()}">${guestNotesDetails.getImage_file_name()}</a>
+	         	</c:if>
+	        </td>           
+            <td> 
+            	<c:if test="${guestNotesDetails.getApproveStatus()=='N'}">
+            		<button type="button" class="btn btn-success" id="appr${guestNotesDetails.getNotes_details_id()}" onclick="approveReject('approve','${guestNotesDetails.getNotes_details_id()}')">Approve</button>
+            		<button type="button" class="btn btn-danger" id="rej${guestNotesDetails.getNotes_details_id()}" onclick="approveReject('remove','${guestNotesDetails.getNotes_details_id()}')">Remove</button>
+            	</c:if> 
+            	<c:if test="${guestNotesDetails.getApproveStatus()=='A'}">
+            		Approved
+            	</c:if> 
             </td>
-            <td>              
-				<% if("N".equalsIgnoreCase(guestNotesDetail.getApproveStatus())){ %>
-              		<button type="button" class="btn btn-success" id="appr<%=guestNotesDetail.getNotes_details_id()%>" onclick="approveReject('approve','<%=guestNotesDetail.getNotes_details_id()%>')">Approve</button>
-            		<button type="button" class="btn btn-danger" id="rej<%=guestNotesDetail.getNotes_details_id()%>" onclick="approveReject('remove','<%=guestNotesDetail.getNotes_details_id()%>')">Remove</button>
-         		<% }
-				else if("A".equalsIgnoreCase(guestNotesDetail.getApproveStatus())){ 
-				%>
-					Approved
-				<%
-				}
-				%>
-            </td>
-         </tr>        
-			<% } %>          
+         </tr>  
+         </c:forEach>               
     	</tbody>
       </table>
     </div>

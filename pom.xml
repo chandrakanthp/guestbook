@@ -88,7 +88,12 @@
 		<dependency>
 		    <groupId>org.springframework.boot</groupId>
 		    <artifactId>spring-boot-devtools</artifactId>
-		</dependency>    
+		</dependency>
+		<dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>jstl</artifactId>
+            <version>1.2</version>
+        </dependency>    
 	</dependencies>
 	<build>
 		<defaultGoal>clean install</defaultGoal>
